@@ -55,6 +55,7 @@ class TestMemoize(unittest.TestCase):
     def test_memoize(self):
         """Test that memoize caches the result after the first call."""
         class TestClass:
+            """ test class """
             def a_method(self):
                 """ test memoize function """
                 return 42
