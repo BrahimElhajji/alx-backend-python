@@ -54,7 +54,6 @@ class TestMemoize(unittest.TestCase):
 
     def test_memoize(self):
         """Test that memoize caches the result after the first call."""
-
         class TestClass:
             def a_method(self):
                 """ test memoize function """
@@ -64,11 +63,8 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 """ memoize """
                 return self.a_method()
-
         with patch.object(TestClass, 'a_method', return_value=42) as m:
             test_obj = TestClass()
-
-            result1 = test_obj.a_property
-            result2 = test_obj.a_property
-
+            test_obj.a_property
+            test_obj.a_property
             m.assert_called_once()
