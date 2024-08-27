@@ -4,6 +4,7 @@ import unittest
 from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, Mock
+from typing import Mapping, Sequence
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -51,7 +52,6 @@ class TestGetJson(unittest.TestCase):
 
 class TestMemoize(unittest.TestCase):
     """Tests for the memoize decorator."""
-
     def test_memoize(self):
         """Test that memoize caches the result after the first call."""
         class TestClass:
