@@ -28,20 +28,22 @@ def stream_users_in_batches(batch_size):
             while True:
                 batch = cursor.fetchmany(batch_size)
                 if not batch:
-                    break
+                    return  # Explicit return to end generator
                 yield batch
         finally:
             cursor.close()
 
 def batch_processing(batch_size):
     """Processes each batch and prints users over age 25."""
-    for batch in stream_users_in_batches(batch_size):  # 1 loop
-        for user in batch:  # 2nd loop
+    for batch in stream_users_in_batches(batch_size):
+        for user in batch:
             if user['age'] > 25:
-                print(user)
+                yield user
 
 if __name__ == "__main__":
     try:
-        batch_processing(50)
+        # When run as a script, consume the generator
+        for user in batch_processing(50):
+            print(user)
     except BrokenPipeError:
         sys.stderr.close()
