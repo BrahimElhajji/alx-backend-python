@@ -1,4 +1,5 @@
-ttests and Integration tests for GithubOrgClient."""
+#!/usr/bin/env python3
+"""Unittests and Integration tests for GithubOrgClient."""
 
 import unittest
 from unittest.mock import patch, PropertyMock
