@@ -1,0 +1,101 @@
+{
+  "info": {
+    "_postman_id": "b2a9a4d3-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "name": "Messaging App API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login - Get JWT Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"user@example.com\",\"password\":\"password123\"}"
+        },
+        "url": {
+          "raw": "{{base_url}}/token/",
+          "host": ["{{base_url}}"],
+          "path": ["token",""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Conversation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"users\":[\"uuid-of-user-1\", \"uuid-of-user-2\"]}"
+        },
+        "url": {
+          "raw": "{{base_url}}/conversations/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations",""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Send Message",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"conversation_id\":\"uuid-of-conversation\", \"message_body\":\"Hello from Postman!\"}"
+        },
+        "url": {
+          "raw": "{{base_url}}/messages/",
+          "host": ["{{base_url}}"],
+          "path": ["messages",""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Conversations",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/conversations/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations",""]
+        }
+      },
+      "response": []
+    }
+  ]
+}
