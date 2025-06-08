@@ -1,7 +1,7 @@
 # chats/middleware.py
 
 import time
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from django.http import HttpResponseForbidden
 
 class RequestLoggingMiddleware:
@@ -66,3 +66,24 @@ class OffensiveLanguageMiddleware:
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+
+
+class RolepermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        user = getattr(request, 'user', None)
+        
+        # If user is not authenticated or role is missing, deny access
+        if not user or not user.is_authenticated:
+            return HttpResponseForbidden("Access denied: User not authenticated.")
+        
+        # Assuming your User model has a 'role' attribute
+        user_role = getattr(user, 'role', None)
+        
+        if user_role not in ['admin', 'moderator']:
+            return HttpResponseForbidden("Access denied: Insufficient permissions.")
+        
+        return self.get_response(request)
+
