@@ -4,12 +4,15 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
-
+from .permissions import IsParticipantOfConversation
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+
+    def get_queryset(self):
+        return self.queryset.filter(participants=self.request.user)
 
     def create(self, request, *args, **kwargs):
         users_data = request.data.get('users')
@@ -33,7 +36,11 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+
+    def get_queryset(self):
+        # Only return messages for conversations the user is in
+        return self.queryset.filter(conversation__participants=self.request.user)
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
