@@ -1,9 +1,10 @@
 
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from .models import Message, Notification
+from .models import Message, Notification, MessageHistory
+from django.contrib.auth.models import User
 
-@receiver(pre_save, sender=Message)
+@receiver(post_save, sender=Message)
 def create_notification(sender, instance, created, **kwargs):
     if created:
         Notification.objects.create(
@@ -19,7 +20,8 @@ def log_message_edits(sender, instance, **kwargs):
             if original.content != instance.content:
                 MessageHistory.objects.create(
                     message=original,
-                    old_content=original.content
+                    old_content=original.content,
+                    edited_by=getattr(instance, '_edited_by', None)
                 )
                 instance.edited = True
         except Message.DoesNotExist:
