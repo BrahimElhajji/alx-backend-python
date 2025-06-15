@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import Message
 from django.db.models import Prefetch
+from django.views.decorators.cache import cache_page
 
 @login_required
 def delete_user(request):
@@ -34,6 +35,7 @@ def send_message(request):
     return render(request, "send_message.html")
 
 
+@cache_page(60)
 @login_required
 def conversation_view(request):
     user = request.user
