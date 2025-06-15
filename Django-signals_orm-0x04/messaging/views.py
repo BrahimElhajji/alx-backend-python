@@ -43,4 +43,10 @@ def conversation_view(request):
         .prefetch_related('replies')
 
     return render(request, "conversation.html", {"messages": top_messages})
+
+
+@login_required
+def unread_messages_view(request):
+    unread_msgs = Message.unread.for_user(request.user)
+    return render(request, "unread_messages.html", {"messages": unread_msgs})
 # Create your views here.
