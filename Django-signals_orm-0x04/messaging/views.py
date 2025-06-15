@@ -47,6 +47,7 @@ def conversation_view(request):
 
 @login_required
 def unread_messages_view(request):
-    unread_msgs = Message.unread.unread_for_user(request.user)
-    return render(request, "unread_messages.html", {"messages": unread_msgs})
+    unread_msgs = Message.objects.filter(receiver=request.user, read=False)\
+            .only('id', 'content', 'timestamp', 'sender')
+            return render(request, "unread_messages.html", {"messages": unread_msgs})
 # Create your views here.
