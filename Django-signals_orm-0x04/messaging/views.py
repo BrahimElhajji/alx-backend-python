@@ -47,6 +47,6 @@ def conversation_view(request):
 
 @login_required
 def unread_messages_view(request):
-    unread_msgs = Message.unread.for_user(request.user)
+    unread_msgs = Message.unread.unread_for_user(request.user)
     return render(request, "unread_messages.html", {"messages": unread_msgs})
 # Create your views here.
