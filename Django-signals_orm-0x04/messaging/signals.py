@@ -12,6 +12,13 @@ def create_notification(sender, instance, created, **kwargs):
             message=instance
         )
 
+@receiver(post_delete, sender=User)
+def delete_user_related_data(sender, instance, **kwargs):
+        Message.objects.filter(sender=instance).delete()
+        Message.objects.filter(receiver=instance).delete()
+        Notification.objects.filter(user=instance).delete()
+        MessageHistory.objects.filter(edited_by=instance).delete()
+
 @receiver(pre_save, sender=Message)
 def log_message_edits(sender, instance, **kwargs):
     if instance.id:
