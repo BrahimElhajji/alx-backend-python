@@ -18,6 +18,8 @@ class Message(models.Model):
         related_name='replies',
         on_delete=models.CASCADE
     )
+    objects = models.Manager()  # Default manager
+    unread = UnreadMessagesManager()  # Custom manager
 
     def __str__(self):
         return f"From {self.sender} to {self.receiver}: {self.content[:30]}"
