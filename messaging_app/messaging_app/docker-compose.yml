@@ -6,8 +6,8 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQLUSER: ${MYSQLUSER}
-      MYSQLDB: ${MYSQLDB}
+      MYSQL_USER: ${MYSQLUSER}
+      MYSQL_DB: ${MYSQLDB}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
