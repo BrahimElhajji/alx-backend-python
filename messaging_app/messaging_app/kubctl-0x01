@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Scale the deployment to 3 replicas
+echo "Scaling messaging-app-deployment to 3 replicas..."
+kubectl scale deployment messaging-app-deployment --replicas=3
+
+# Wait a few seconds to let the pods start
+sleep 5
+
+# Get the running pods
+echo "Current pods:"
+kubectl get pods -l app=messaging-app
+
+# Check if wrk is installed
+if ! command -v wrk &> /dev/null
+then
+    echo "wrk is not installed. Skipping load test."
+else
+    echo "Running load test using wrk..."
+    # Note: ClusterIP services are internal; you need port-forwarding or a NodePort to access externally
+    kubectl port-forward service/messaging-app-service 8000:8000 &
+    PF_PID=$!
+    sleep 3  # Give port-forwarding time to start
+    wrk -t2 -c50 -d10s http://127.0.0.1:8000/
+    kill $PF_PID
+fi
+
+# Show resource usage (requires metrics-server)
+echo "Monitoring resource usage..."
+kubectl top pods
