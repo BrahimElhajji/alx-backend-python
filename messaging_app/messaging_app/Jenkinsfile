@@ -3,13 +3,14 @@ pipeline {
 
     environment {
         VENV = 'venv'
+        DOCKER_IMAGE = 'yourdockerhubusername/messaging_app:latest' // Placeholder
     }
 
     stages {
         stage('Clone repository') {
             steps {
                 git credentialsId: 'github-creds', url: 'https://github.com/BrahimElhajji/alx-backend-python.git'
-                sh 'git branch' // Required by checker
+                sh 'git branch'
             }
         }
 
@@ -31,9 +32,28 @@ pipeline {
                 junit 'report.xml'
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'echo "Simulating Docker build..."'
+                sh 'docker build -t $DOCKER_IMAGE -f messaging_app/Dockerfile .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "Simulating Docker push..."
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $DOCKER_IMAGE
+                    '''
+                }
+            }
+        }
     }
 
     triggers {
-        // Manual trigger
+        // Manual trigger only
     }
 }
