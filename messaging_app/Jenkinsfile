@@ -1,0 +1,50 @@
+
+// This Jenkinsfile defines a pipeline that:
+// - Clones the repo from GitHub
+// - Sets up a virtual environment (using ShiningPanda plugin)
+// - Installs dependencies from requirements.txt
+// - Runs tests using pytest and generates a report
+// - Publishes the test report for review
+
+pipeline {
+    agent any
+
+    environment {
+        VENV = 'venv'
+    }
+
+    stages {
+        stage('Clone repository') {
+            steps {
+                git credentialsId: 'github-creds', url: 'https://github.com/BrahimElhajji/alx-backend-python.git'
+            }
+        }
+
+        stage('Set up Python environment') {
+            steps {
+                // Simulate virtual environment setup using ShiningPanda (if Jenkins were running)
+                withPythonEnv("${env.VENV}") {
+                    sh 'pip install -r messaging_app/requirements.txt'
+                }
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                withPythonEnv("${env.VENV}") {
+                    sh 'pytest messaging_app/tests --junitxml=report.xml'
+                }
+            }
+        }
+
+        stage('Publish test report') {
+            steps {
+                junit 'report.xml'
+            }
+        }
+    }
+
+    triggers {
+        // Pipeline is triggered manually
+    }
+}
